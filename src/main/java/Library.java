@@ -1,4 +1,13 @@
+import java.util.HashMap;
+
 public class Library implements Stock {
+
+    private HashMap<String,Book> records;
+
+    @Override
+    public void addBookToRecords(String ISBN, Book newBook) {
+        records.put(ISBN,newBook);
+    }
 
     @Override
     public void searchByAuthor(String Author) {
@@ -29,4 +38,6 @@ public class Library implements Stock {
     public void deleteBook(String ISBN) {
 
     }
+
+
 }

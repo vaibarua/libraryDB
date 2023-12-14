@@ -6,8 +6,8 @@ public class Main {
     BufferedReader buff;
     InputStreamReader isr;
     String selectOperation,selectField;
-    String BookName, BookAuthor, BookISBN, BookPrice,BookGenre;
-    float upperLimit,lowerLimit;
+    String BookName, BookAuthor, BookISBN,BookGenre;
+    float  BookPrice,upperLimit,lowerLimit;
     Stock stock;
 
     public Main() {
@@ -53,7 +53,12 @@ public class Main {
         System.out.println("Please enter the ISBN of the Book:");
         BookISBN=takeStringInput(BookISBN);
         System.out.println("Please enter the Price of the Book:");
-        BookPrice=takeStringInput(BookPrice);
+        try {
+            BookPrice = Float.parseFloat(buff.readLine());
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("Please enter the Genre of the Book:");
         BookGenre=takeStringInput(BookGenre);
         return new Book(BookName,BookAuthor,BookISBN,BookPrice,BookGenre);
