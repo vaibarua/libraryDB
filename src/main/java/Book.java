@@ -1,5 +1,5 @@
 public class Book {
-    String BookName, BookAuthor, BookISBN,BookGenre;
+    String BookName, BookAuthor, BookISBN, BookGenre;
     float BookPrice;
     public Book(String BookName, String BookAuthor, String BookISBN, float BookPrice,String BookGenre) {
         this.BookName = BookName;
