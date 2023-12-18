@@ -16,13 +16,14 @@ public class Library implements Stock {
     public void addBookToRecords(Book newBook) {
         if(newBook==null) System.out.println("Object not passed");
         else System.out.println("Book Name:"+newBook.BookName);
-        pStmt = SQLconnect.getPreparedStatement("insert into books values(?,?,?,?,?)");
+        pStmt = SQLconnect.getPreparedStatement("insert into books values(?,?,?,?,?,?)");
         try {
             pStmt.setString(1,newBook.BookName);
             pStmt.setString(2,newBook.BookAuthor);
             pStmt.setString(3,newBook.BookISBN);
             pStmt.setString(4,newBook.BookGenre);
             pStmt.setFloat(5,newBook.BookPrice);
+            pStmt.setString(6,newBook.BookDate);
             pStmt.executeUpdate();
         }
         catch (SQLException e) {
@@ -55,7 +56,7 @@ public class Library implements Stock {
         ArrayList <String> resBooks = new ArrayList<>();
         pStmt = SQLconnect.getPreparedStatement("select * from books where BookISBN = ?;");
         try {
-            pStmt.setString(1,"%"+ISBN+"%");
+            pStmt.setString(1,ISBN);
             ResultSet rs = pStmt.executeQuery();
             while(rs.next()) {
                 resBooks.add(rs.getString(1));
@@ -179,6 +180,64 @@ public class Library implements Stock {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void cheapestAndCostliestBook() {
+        pStmt = SQLconnect.getPreparedStatement("select BookName,\n" +
+                "       BookPrice,\n" +
+                "       case\n" +
+                "           when BookPrice = (select MAX(BookPrice) FROM books) then 'Costliest'\n" +
+                "           when BookPrice = (select MIN(BookPrice) FROM books) then 'Cheapest'\n" +
+                "           else 'Unknown'\n" +
+                "       end AS PriceCategory\n" +
+                "from books\n" +
+                "where BookPrice = (select MAX(BookPrice) from books)\n" +
+                "   or BookPrice = (select MIN(BookPrice) from books);\n");
+        try {
+            ResultSet rs = pStmt.executeQuery();
+            while(rs.next()) {
+                String bookTitle = rs.getString("BookName");
+                double bookPrice = rs.getDouble("BookPrice");
+                String priceCategory = rs.getString("PriceCategory");
+
+                System.out.println(priceCategory + " Book");
+                System.out.println("BookTitle: " + bookTitle);
+                System.out.println("BookPrice: " + bookPrice);
+                System.out.println("------------------------");
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void deleteOldBooks() {
+        ArrayList <String> resBooks = new ArrayList<>();
+        stmt = SQLconnect.getStatement();
+        try{
+            ResultSet rs = stmt.executeQuery("select * from books where (CURDATE()-BookDate)>=730");
+            while (rs.next()) {
+                resBooks.add(rs.getString(1));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Books whose Published Dates are over 2 years old:");
+        for(String Book:resBooks) {
+            System.out.println(Book);
+        }
+        stmt = SQLconnect.getStatement();
+        try {
+            stmt.executeUpdate("delete from books where (CURDATE()-BookDate)>=730");
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Successfully Deleted.");
     }
 
 

@@ -10,4 +10,6 @@ public interface Stock {
     public void searchByName(String name);
     public void updateBookDetails(String ISBN);
     public void deleteBook(String ISBN);
+    public void cheapestAndCostliestBook();
+    public void deleteOldBooks();
 }
