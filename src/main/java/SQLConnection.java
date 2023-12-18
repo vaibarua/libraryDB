@@ -7,7 +7,7 @@ public class SQLConnection {
     private void connectionMain(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/librarydb","root","@Travisscott1");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/librarydb","root","password");
         }
         catch (Exception e) {
             e.printStackTrace();
